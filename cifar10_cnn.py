@@ -38,7 +38,7 @@ img_channels = 3
 
 def parse_arg():
     parser = optparse.OptionParser('usage%prog [-l load parameterf from] [-d dump parameter to] [-e epoch] [-r src or tgt]')
-    parser.add_option('-e', dest='num_epochs')
+    parser.add_option('-e', dest='epochs')
     parser.add_option('-a', dest='data_augmentation')
     parser.add_option('-n', dest='noise')
     parser.add_option('-m', dest='maxout')
