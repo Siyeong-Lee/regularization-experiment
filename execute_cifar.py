@@ -17,6 +17,7 @@ dropout = [False, True]
 l1 = [False]
 l2 = [False]
 
+
 for e in epoch:
     for a in aug:
         for n in noise:
