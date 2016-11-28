@@ -35,6 +35,7 @@ data_augmentation = False
 img_rows, img_cols = 32, 32
 # the CIFAR10 images are RGB
 img_channels = 3
+sigma = 0.05
 
 def parse_arg():
     parser = optparse.OptionParser('usage%prog [-l load parameterf from] [-d dump parameter to] [-e epoch] [-r src or tgt]')
@@ -118,15 +119,12 @@ def main(nb_epoch=50, data_augmentation=False, noise=False, maxout=False, dropou
     X_test /= 255
 
     if not data_augmentation:
-        print('Not using data augmentation.')
         his = model.fit(X_train, Y_train,
                   batch_size=batch_size,
                   nb_epoch=nb_epoch,
                   validation_split=0.2,
                   shuffle=True)
     else:
-        print('Using real-time data augmentation.')
-
         # this will do preprocessing and realtime data augmentation
         datagen = ImageDataGenerator(
             featurewise_center=False,  # set input mean to 0 over the dataset
@@ -165,8 +163,14 @@ def main(nb_epoch=50, data_augmentation=False, noise=False, maxout=False, dropou
     plt.legend(loc="upper left", bbox_to_anchor=(1,1))
     plt.xlabel('#epoch')
     plt.ylabel('loss')
-    output_file_name = './output/train_val_loss_with_dropout_epochs_{}.png'.format(epochs)
-    plt.savefig(output_file_name, dpi=300)
+    # -e {0} -a {1} -n {2} -m {3} -d {4} -l {5} -r {6}
+    output_fig_name = './output/train_val_loss_with_dropout_epochs_{0}_data_augmentation_{1}_noise_{2}_maxout_{3}_dropout_{4}_l1_{5}_l2_{6}.png'.format(nb_epoch, data_augmentation, noise, maxout, dropout, l1, l2)
+    plt.savefig(output_fig_name, dpi=300)
+    output_file_name = './output/train_val_loss_with_dropout_epochs_{0}_data_augmentation_{1}_noise_{2}_maxout_{3}_dropout_{4}_l1_{5}_l2_{6}.txt'.format(nb_epoch, data_augmentation, noise, maxout, dropout, l1, l2)
+    f = open(output_file_name, 'w')
+    print('Test score:', score[0], file=output_file_name)
+    print('Test accuracy:', score[1], file=output_file_name)
+    f.close()
     plt.show()
 
 if __name__ == '__main__':
