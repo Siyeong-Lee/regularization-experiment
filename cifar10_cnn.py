@@ -168,8 +168,8 @@ def main(nb_epoch=50, data_augmentation=False, noise=False, maxout=False, dropou
     plt.savefig(output_fig_name, dpi=300)
     output_file_name = './output/train_val_loss_with_dropout_epochs_{0}_data_augmentation_{1}_noise_{2}_maxout_{3}_dropout_{4}_l1_{5}_l2_{6}.txt'.format(nb_epoch, data_augmentation, noise, maxout, dropout, l1, l2)
     f = open(output_file_name, 'w')
-    print('Test score:', score[0], file=output_file_name)
-    print('Test accuracy:', score[1], file=output_file_name)
+    f.write('Test score:' % score[0])
+    f.write('Test accuracy:'% score[1])
     f.close()
     plt.show()
 
