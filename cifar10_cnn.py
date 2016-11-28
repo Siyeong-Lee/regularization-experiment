@@ -16,7 +16,7 @@ from keras.datasets import cifar10
 from keras.preprocessing.image import ImageDataGenerator
 from keras.models import Sequential
 from keras.layers import Dense, Dropout, Activation, Flatten
-from keras.layers import Convolution2D, MaxPooling2D, GaussianNoise
+from keras.layers import Convolution2D, MaxPooling2D, GaussianNoise, MaxoutDense
 from keras.regularizers import l1, l2, activity_l1, activity_l2, l1l2
 from keras.optimizers import SGD
 from keras.utils import np_utils
