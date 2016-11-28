@@ -51,6 +51,14 @@ def parse_arg():
 
 def main(nb_epoch=50, data_augmentation=False, noise=False, maxout=False, dropout=False, l1=False, l2=False):
 
+    # print settings for this experiment
+    print("number of epoch: {0}".format(nb_epoch))
+    print("data augmentation: {0}".format(data_augmentation))
+    print("noise: {0}".format(noise))
+    print("maxout: {0}".format(maxout))
+    print("dropout: {0}".format(dropout))
+    print("l1: {0}".format(l1))
+    print("l2: {0}".format(l2))
     # the data, shuffled and split between train and test sets
     (X_train, y_train), (X_test, y_test) = cifar10.load_data()
     print('X_train shape:', X_train.shape)
@@ -150,6 +158,7 @@ def main(nb_epoch=50, data_augmentation=False, noise=False, maxout=False, dropou
     train_loss = his.history['loss']
     val_loss = his.history['val_loss']
 
+
     # visualize training history
     plt.plot(range(1, len(train_loss)+1), train_loss, color='blue', label='train loss')
     plt.plot(range(1, len(val_loss)+1), val_loss, color='red', label='val loss')
@@ -164,7 +173,7 @@ if __name__ == '__main__':
     opts = parse_arg()
     kwargs = {}
     if len(sys.argv) > 1:
-        kwargs['num_epoch'] = int(opts.epoch)
+        kwargs['nb_epoch'] = int(opts.epoch)
         kwargs['data_augmentation'] = True if opts.data_augmentation == 'True' else False
         kwargs['noise'] = True if opts.noise == 'True' else False
         kwargs['maxout'] = True if opts.maxout == 'True' else False
