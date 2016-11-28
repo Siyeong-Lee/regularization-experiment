@@ -167,9 +167,9 @@ def main(nb_epoch=50, data_augmentation=False, noise=False, maxout=False, dropou
     output_fig_name = './output/train_val_loss_with_dropout_epochs_{0}_data_augmentation_{1}_noise_{2}_maxout_{3}_dropout_{4}_l1_{5}_l2_{6}.png'.format(nb_epoch, data_augmentation, noise, maxout, dropout, l1, l2)
     plt.savefig(output_fig_name, dpi=300)
     output_file_name = './output/train_val_loss_with_dropout_epochs_{0}_data_augmentation_{1}_noise_{2}_maxout_{3}_dropout_{4}_l1_{5}_l2_{6}.txt'.format(nb_epoch, data_augmentation, noise, maxout, dropout, l1, l2)
-    f = open(output_file_name, 'w')
-    f.write('Test score:' % score[0])
-    f.write('Test accuracy:'% score[1])
+    with open(output_file_name, "w") as text_file:
+        f.write('Test score:' % score[0])
+        f.write('Test accuracy:'% score[1])
     f.close()
     plt.show()
 
