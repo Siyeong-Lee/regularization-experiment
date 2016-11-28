@@ -164,7 +164,7 @@ if __name__ == '__main__':
     opts = parse_arg()
     kwargs = {}
     if len(sys.argv) > 1:
-        kwargs['num_epochs'] = int(opts.epoch)
+        kwargs['num_epoch'] = int(opts.epoch)
         kwargs['data_augmentation'] = True if opts.data_augmentation == 'True' else False
         kwargs['noise'] = True if opts.noise == 'True' else False
         kwargs['maxout'] = True if opts.maxout == 'True' else False
