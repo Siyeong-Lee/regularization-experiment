@@ -36,8 +36,8 @@ img_rows, img_cols = 32, 32
 # the CIFAR10 images are RGB
 img_channels = 3
 sigma = 0.01
-l1_weight = 0.5
-l2_weight = 0.5
+l1_weight = 0.05
+l2_weight = 0.05
 
 def parse_arg():
     parser = optparse.OptionParser('usage%prog [-l load parameterf from] [-d dump parameter to] [-e epoch] [-r src or tgt]')
@@ -160,7 +160,8 @@ def main(nb_epoch=50, data_augmentation=False, noise=False, maxout=False, dropou
     print('Test accuracy:', score[1])
 
     # wirte test accuracy to a file
-    output_file_name = './output/train_val_loss_with_dropout_epochs_{0}_data_augmentation_{1}_noise_{2}_maxout_{3}_dropout_{4}_l1_{5}_l2_{6}.txt'.format(nb_epoch, data_augmentation, noise, maxout, dropout, l1, l2)
+
+    output_file_name = './output/train_val_loss_with_dropout_epochs_{0}_data_augmentation_{1}_noise_{2}_maxout_{3}_dropout_{4}_l1_{5}_l2_{6}_sigma_{7}_l1weight_{8}_l2weight_{9}.txt'.format(nb_epoch, data_augmentation, noise, maxout, dropout, l1, l2, sigma, l1weight, l2weight)
     print(output_file_name)
     with open(output_file_name, "w") as text_file:
         text_file.write('Test score: {}'.format(score[0]))
@@ -177,7 +178,6 @@ def main(nb_epoch=50, data_augmentation=False, noise=False, maxout=False, dropou
     plt.xlabel('#epoch')
     plt.ylabel('loss')
     # @TODO what's the deal around here ~"~"?
-    output_fig_name = './output/train_val_loss_with_dropout_epochs_{0}_data_augmentation_{1}_noise_sigma_0.01_{2}_maxout_{3}_dropout_{4}_l1_weight_0.05_{5}_l2_wieght_0.05_{6}.png'.format(nb_epoch, data_augmentation, noise, maxout, dropout, l1, l2)
     plt.savefig(output_fig_name, dpi=300)
     plt.show()
 
