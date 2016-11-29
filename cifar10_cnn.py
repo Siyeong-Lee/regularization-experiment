@@ -81,6 +81,7 @@ def main(nb_epoch=1, data_augmentation=True, noise=True, maxout=True, dropout=Tr
 
     # convert class vectors to binary class matrices
     Y_train = np_utils.to_categorical(y_train, nb_classes)
+    Y_valid = np_utils.to_categorical(y_valid, nb_classes)
     Y_test = np_utils.to_categorical(y_test, nb_classes)
 
     model = Sequential()
@@ -136,7 +137,7 @@ def main(nb_epoch=1, data_augmentation=True, noise=True, maxout=True, dropout=Tr
         his = model.fit(X_train, Y_train,
                   batch_size=batch_size,
                   nb_epoch=nb_epoch,
-                  validation_data=(X_valid, y_valid),
+                  validation_data=(X_valid, Y_valid),
                   shuffle=True)
     else:
         # this will do preprocessing and realtime data augmentation
@@ -161,7 +162,7 @@ def main(nb_epoch=1, data_augmentation=True, noise=True, maxout=True, dropout=Tr
                             batch_size=batch_size),
                             samples_per_epoch=X_train.shape[0],
                             nb_epoch=nb_epoch,
-                            validation_data=(X_valid, y_valid))
+                            validation_data=(X_valid, Y_valid))
 
     # evaluate our model
     score = model.evaluate(X_test, Y_test, verbose=0)
