@@ -38,6 +38,8 @@ img_channels = 3
 sigma = 0.01
 l1_weight = 0.05
 l2_weight = 0.05
+l1_activation = 0.05
+l2_activation = 0.05
 
 def parse_arg():
     parser = optparse.OptionParser('usage%prog [-l load parameterf from] [-d dump parameter to] [-e epoch] [-r src or tgt]')
@@ -52,9 +54,9 @@ def parse_arg():
     (options, args) = parser.parse_args()
     return options
 
-def main(nb_epoch=50, data_augmentation=False, noise=False, maxout=False, dropout=False, l1=False, l2=False):
+def main(nb_epoch=50, data_augmentation=False, noise=False, maxout=False, dropout=False, l1_reg=False, l2_reg=False):
     # l1 and l2 regularization shouldn't be true in the same time
-    if l1 and l2:
+    if l1_reg and l2_reg:
         print("No need to run l1 and l2 regularization in the same time")
         quit()
     # print settings for this experiment
@@ -101,9 +103,9 @@ def main(nb_epoch=50, data_augmentation=False, noise=False, maxout=False, dropou
         model.add(MaxoutDense(512, nb_feature=4, init='glorot_uniform'))
     if not (l1 or l2):
         model.add(Dense(512))
-    if l1:
+    if l1_reg:
         model.add(Dense(512),  W_regularizer=l1(l1_weight))
-    elif l2:
+    elif l2_reg:
         model.add(Dense(512),  W_regularizer=l2(l2_weight))
 
     model.add(Activation('relu'))
