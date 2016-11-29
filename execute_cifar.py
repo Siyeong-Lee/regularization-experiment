@@ -11,11 +11,11 @@ def run(e, a, n, m, d, l, r):
 
 epoch = [1]
 aug = [False]
-noise = [False, True]
-maxout = [False, True]
-dropout = [False, True]
-l1 = [False, True]
-l2 = [False, True]
+noise = [True, False]
+maxout = [True, False]
+dropout = [True, False]
+l1 = [True, False]
+l2 = [True, False]
 
 
 for e in epoch:
