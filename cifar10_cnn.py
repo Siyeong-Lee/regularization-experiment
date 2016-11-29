@@ -35,7 +35,9 @@ data_augmentation = False
 img_rows, img_cols = 32, 32
 # the CIFAR10 images are RGB
 img_channels = 3
-sigma = 0.05
+sigma = 0.01
+l1_weight = 0.5
+l2_weight = 0.5
 
 def parse_arg():
     parser = optparse.OptionParser('usage%prog [-l load parameterf from] [-d dump parameter to] [-e epoch] [-r src or tgt]')
@@ -51,7 +53,10 @@ def parse_arg():
     return options
 
 def main(nb_epoch=50, data_augmentation=False, noise=False, maxout=False, dropout=False, l1=False, l2=False):
-
+    # l1 and l2 regularization shouldn't be true in the same time
+    if l1 and l2:
+        print("No need to run l1 and l2 regularization in the same time")
+        quit()
     # print settings for this experiment
     print("number of epoch: {0}".format(nb_epoch))
     print("data augmentation: {0}".format(data_augmentation))
@@ -97,9 +102,9 @@ def main(nb_epoch=50, data_augmentation=False, noise=False, maxout=False, dropou
     if not (l1 or l2):
         model.add(Dense(512))
     if l1:
-        model.add(Dense(512),  W_regularizer=l1(0.01), activity_regularizer=activity_l1(0.01))
-    if l2:
-        model.add(Dense(512),  W_regularizer=l2(0.01), activity_regularizer=activity_l2(0.01))
+        model.add(Dense(512),  W_regularizer=l1(l1_weight))
+    elif l2:
+        model.add(Dense(512),  W_regularizer=l2(l2_weight))
 
     model.add(Activation('relu'))
     if dropout:
@@ -159,6 +164,7 @@ def main(nb_epoch=50, data_augmentation=False, noise=False, maxout=False, dropou
     print(output_file_name)
     with open(output_file_name, "w") as text_file:
         text_file.write('Test score: {}'.format(score[0]))
+        text_file.write('\n')
         text_file.write('Test accuracy: {}'.format(score[1]))
     text_file.close()
 
@@ -171,7 +177,7 @@ def main(nb_epoch=50, data_augmentation=False, noise=False, maxout=False, dropou
     plt.xlabel('#epoch')
     plt.ylabel('loss')
     # @TODO what's the deal around here ~"~"?
-    output_fig_name = './output/train_val_loss_with_dropout_epochs_{0}_data_augmentation_{1}_noise_{2}_maxout_{3}_dropout_{4}_l1_{5}_l2_{6}.png'.format(nb_epoch, data_augmentation, noise, maxout, dropout, l1, l2)
+    output_fig_name = './output/train_val_loss_with_dropout_epochs_{0}_data_augmentation_{1}_noise_sigma_0.01_{2}_maxout_{3}_dropout_{4}_l1_weight_0.05_{5}_l2_wieght_0.05_{6}.png'.format(nb_epoch, data_augmentation, noise, maxout, dropout, l1, l2)
     plt.savefig(output_fig_name, dpi=300)
     plt.show()
 
