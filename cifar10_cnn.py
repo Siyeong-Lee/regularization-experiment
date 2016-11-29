@@ -22,6 +22,7 @@ from keras.layers import Convolution2D, MaxPooling2D, GaussianNoise, MaxoutDense
 from keras.regularizers import l1, l2, activity_l1, activity_l2, l1l2
 from keras.optimizers import SGD
 from keras.utils import np_utils
+from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
 import optparse
 import sys
@@ -71,8 +72,11 @@ def main(nb_epoch=1, data_augmentation=True, noise=True, maxout=True, dropout=Tr
     print("l2: {0}".format(l2_reg))
     # the data, shuffled and split between train and test sets
     (X_train, y_train), (X_test, y_test) = cifar10.load_data()
+    # split the validation dataset
+    X_train, X_valid, y_train, y_valid = train_test_split(X_train, y_train, test_size=0.2, random_state=0)
     print('X_train shape:', X_train.shape)
     print(X_train.shape[0], 'train samples')
+    print(X_valid.shape[0], 'valid samples')
     print(X_test.shape[0], 'test samples')
 
     # convert class vectors to binary class matrices
@@ -132,7 +136,7 @@ def main(nb_epoch=1, data_augmentation=True, noise=True, maxout=True, dropout=Tr
         his = model.fit(X_train, Y_train,
                   batch_size=batch_size,
                   nb_epoch=nb_epoch,
-                  validation_split=0.2,
+                  validation_data=(X_valid, y_valid),
                   shuffle=True)
     else:
         # this will do preprocessing and realtime data augmentation
@@ -157,7 +161,7 @@ def main(nb_epoch=1, data_augmentation=True, noise=True, maxout=True, dropout=Tr
                             batch_size=batch_size),
                             samples_per_epoch=X_train.shape[0],
                             nb_epoch=nb_epoch,
-                            validation_split=0.2)
+                            validation_data=(X_valid, y_valid))
 
     # evaluate our model
     score = model.evaluate(X_test, Y_test, verbose=0)
