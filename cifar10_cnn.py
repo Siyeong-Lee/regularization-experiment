@@ -153,24 +153,26 @@ def main(nb_epoch=50, data_augmentation=False, noise=False, maxout=False, dropou
     score = model.evaluate(X_test, Y_test, verbose=0)
     print('Test score:', score[0])
     print('Test accuracy:', score[1])
-    train_loss = his.history['loss']
-    val_loss = his.history['val_loss']
 
+    # wirte test accuracy to a file
+    output_file_name = './output/train_val_loss_with_dropout_epochs_{0}_data_augmentation_{1}_noise_{2}_maxout_{3}_dropout_{4}_l1_{5}_l2_{6}.txt'.format(nb_epoch, data_augmentation, noise, maxout, dropout, l1, l2)
+    print(output_file_name)
+    with open(output_file_name, "w") as text_file:
+        text_file.write('Test score: {}'.format(score[0]))
+        text_file.write('Test accuracy: {}'.format(score[1]))
+    text_file.close()
 
     # visualize training history
+    train_loss = his.history['loss']
+    val_loss = his.history['val_loss']
     plt.plot(range(1, len(train_loss)+1), train_loss, color='blue', label='train loss')
     plt.plot(range(1, len(val_loss)+1), val_loss, color='red', label='val loss')
     plt.legend(loc="upper left", bbox_to_anchor=(1,1))
     plt.xlabel('#epoch')
     plt.ylabel('loss')
-    # -e {0} -a {1} -n {2} -m {3} -d {4} -l {5} -r {6}
+    # @TODO what's the deal around here ~"~"?
     output_fig_name = './output/train_val_loss_with_dropout_epochs_{0}_data_augmentation_{1}_noise_{2}_maxout_{3}_dropout_{4}_l1_{5}_l2_{6}.png'.format(nb_epoch, data_augmentation, noise, maxout, dropout, l1, l2)
     plt.savefig(output_fig_name, dpi=300)
-    output_file_name = './output/train_val_loss_with_dropout_epochs_{0}_data_augmentation_{1}_noise_{2}_maxout_{3}_dropout_{4}_l1_{5}_l2_{6}.txt'.format(nb_epoch, data_augmentation, noise, maxout, dropout, l1, l2)
-    with open(output_file_name, "w") as text_file:
-        text_file.write('Test score:' % score[0])
-        text_file.write('Test accuracy:'% score[1])
-    text_file.close()
     plt.show()
 
 if __name__ == '__main__':
