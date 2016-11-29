@@ -56,7 +56,7 @@ def parse_arg():
     (options, args) = parser.parse_args()
     return options
 
-def main(nb_epoch=50, data_augmentation=False, noise=False, maxout=False, dropout=False, l1_reg=False, l2_reg=False):
+def main(nb_epoch=1, data_augmentation=True, noise=True, maxout=True, dropout=True, l1_reg=True, l2_reg=True):
     # l1 and l2 regularization shouldn't be true in the same time
     if l1_reg and l2_reg:
         print("No need to run l1 and l2 regularization in the same time")
@@ -105,10 +105,11 @@ def main(nb_epoch=50, data_augmentation=False, noise=False, maxout=False, dropou
         model.add(MaxoutDense(512, nb_feature=4, init='glorot_uniform'))
     if not (l1_reg or l2_reg):
         model.add(Dense(512))
+    # activation regularization not implemented yet
     if l1_reg:
-        model.add(Dense(512),  W_regularizer=l1(l1_weight))
+        model.add(Dense(512,  W_regularizer=l1(l1_weight)))
     elif l2_reg:
-        model.add(Dense(512),  W_regularizer=l2(l2_weight))
+        model.add(Dense(512,  W_regularizer=l2(l2_weight)))
 
     model.add(Activation('relu'))
     if dropout:
@@ -140,7 +141,7 @@ def main(nb_epoch=50, data_augmentation=False, noise=False, maxout=False, dropou
             samplewise_center=False,  # set each sample mean to 0
             featurewise_std_normalization=False,  # divide inputs by std of the dataset
             samplewise_std_normalization=False,  # divide each input by its std
-            zca_whitening=False,  # apply ZCA whitening
+            zca_whitening=True,  # apply ZCA whitening
             rotation_range=0,  # randomly rotate images in the range (degrees, 0 to 180)
             width_shift_range=0.1,  # randomly shift images horizontally (fraction of total width)
             height_shift_range=0.1,  # randomly shift images vertically (fraction of total height)
