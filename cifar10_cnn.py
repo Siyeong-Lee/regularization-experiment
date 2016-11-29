@@ -9,6 +9,8 @@ It gets down to 0.65 test logloss in 25 epochs, and down to 0.55 after 50 epochs
 Note: the data was pickled with Python 2, and some encoding issues might prevent you
 from loading it in Python 3. You might have to load it in Python 2,
 save it in a different format, load it in Python 3 and repickle it.
+
+to simply test the code, run THEANO_FLAGS=device=gpu,floatX=float32 python cifar10_cnn.py -e 1
 '''
 
 from __future__ import print_function
@@ -65,8 +67,8 @@ def main(nb_epoch=50, data_augmentation=False, noise=False, maxout=False, dropou
     print("noise: {0}".format(noise))
     print("maxout: {0}".format(maxout))
     print("dropout: {0}".format(dropout))
-    print("l1: {0}".format(l1))
-    print("l2: {0}".format(l2))
+    print("l1: {0}".format(l1_reg))
+    print("l2: {0}".format(l2_reg))
     # the data, shuffled and split between train and test sets
     (X_train, y_train), (X_test, y_test) = cifar10.load_data()
     print('X_train shape:', X_train.shape)
@@ -101,7 +103,7 @@ def main(nb_epoch=50, data_augmentation=False, noise=False, maxout=False, dropou
     model.add(Flatten())
     if maxout:
         model.add(MaxoutDense(512, nb_feature=4, init='glorot_uniform'))
-    if not (l1 or l2):
+    if not (l1_reg or l2_reg):
         model.add(Dense(512))
     if l1_reg:
         model.add(Dense(512),  W_regularizer=l1(l1_weight))
@@ -163,7 +165,7 @@ def main(nb_epoch=50, data_augmentation=False, noise=False, maxout=False, dropou
 
     # wirte test accuracy to a file
 
-    output_file_name = './output/train_val_loss_with_dropout_epochs_{0}_data_augmentation_{1}_noise_{2}_maxout_{3}_dropout_{4}_l1_{5}_l2_{6}_sigma_{7}_l1weight_{8}_l2weight_{9}.txt'.format(nb_epoch, data_augmentation, noise, maxout, dropout, l1, l2, sigma, l1weight, l2weight)
+    output_file_name = './output/train_val_loss_with_dropout_epochs_{0}_data_augmentation_{1}_noise_{2}_maxout_{3}_dropout_{4}_l1_{5}_l2_{6}_sigma_{7}_l1weight_{8}_l2weight_{9}.txt'.format(nb_epoch, data_augmentation, noise, maxout, dropout, l1_reg, l2_reg, sigma, l1_weight, l2_weight)
     print(output_file_name)
     with open(output_file_name, "w") as text_file:
         text_file.write('Test score: {}'.format(score[0]))
@@ -192,7 +194,7 @@ if __name__ == '__main__':
         kwargs['noise'] = True if opts.noise == 'True' else False
         kwargs['maxout'] = True if opts.maxout == 'True' else False
         kwargs['dropout'] = True if opts.dropout == 'True' else False
-        kwargs['l1'] = True if opts.l1 == 'True' else False
-        kwargs['l2'] = True if opts.l2 == 'True' else False
+        kwargs['l1_reg'] = True if opts.l1 == 'True' else False
+        kwargs['l2_reg'] = True if opts.l2 == 'True' else False
 
     main(**kwargs)

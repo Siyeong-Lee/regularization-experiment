@@ -9,7 +9,7 @@ from threading import Thread
 def run(e, a, n, m, d, l, r):
     subprocess.call('THEANO_FLAGS=device=gpu,floatX=float32 python cifar10_cnn.py -e {0} -a {1} -n {2} -m {3} -d {4} -l {5} -r {6}'.format(e, a, n, m, d, l, r), shell=True)
 
-epoch = [50]
+epoch = [1]
 aug = [False]
 noise = [False, True]
 maxout = [False, True]
