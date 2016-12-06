@@ -108,13 +108,14 @@ def main(nb_epoch=1, data_augmentation=True, noise=True, maxout=True, dropout=Tr
     model.add(Flatten())
     if maxout:
         model.add(MaxoutDense(512, nb_feature=4, init='glorot_uniform'))
-    if not (l1_reg or l2_reg):
-        model.add(Dense(512))
-    # activation regularization not implemented yet
-    if l1_reg:
-        model.add(Dense(512,  W_regularizer=l1(l1_weight)))
-    elif l2_reg:
-        model.add(Dense(512,  W_regularizer=l2(l2_weight)))
+    else:
+        if not (l1_reg or l2_reg):
+            model.add(Dense(512))
+        # activation regularization not implemented yet
+        if l1_reg:
+            model.add(Dense(512,  W_regularizer=l1(l1_weight)))
+        elif l2_reg:
+            model.add(Dense(512,  W_regularizer=l2(l2_weight)))
 
     model.add(Activation('relu'))
     if dropout:
