@@ -85,7 +85,7 @@ def _get_file_path(filename=""):
     If filename=="" then return the directory of the files.
     """
 
-    return os.path.join(data_path, "cifar-10-batches-py/", filename)
+return os.path.join(data_path, "cifar-10-batches-py/", filename)
 
 
 def _unpickle(filename):
@@ -243,7 +243,7 @@ def download_and_extract(url, download_dir):
 
     # Filename for saving the file downloaded from the internet.
     # Use the filename from the URL and add it to the download_dir.
-    filename = url.split('/')[-1]
+    filename = 'cifar-10-batches-py/'
     file_path = os.path.join(download_dir, filename)
 
     # Check if the file already exists.
