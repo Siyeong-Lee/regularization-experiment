@@ -35,12 +35,14 @@
 import numpy as np
 import pickle
 import os
+from os.path import expanduser
 from keras.utils import np_utils
 ########################################################################
 
 # Directory where you want to download and save the data-set.
 # Set this before you start calling any of the functions below.
-data_path = "data/CIFAR-10/"
+home = expanduser("~")
+data_path = os.path.join(home, "data/CIFAR-10/")
 
 # URL for the data-set on the internet.
 data_url = "https://www.cs.toronto.edu/~kriz/cifar-10-python.tar.gz"
@@ -259,7 +261,6 @@ def download_and_extract(url, download_dir):
                                                   filename=file_path,
                                                   reporthook=_print_download_progress)
 
-        print()
         print("Download finished. Extracting files.")
 
         if file_path.endswith(".zip"):
