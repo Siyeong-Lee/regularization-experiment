@@ -6,17 +6,18 @@ import multiprocessing as mp
 from multiprocessing import Queue
 from threading import Thread
 
-def run(e, a, n, m, d, l, r):
-    subprocess.call('THEANO_FLAGS=device=gpu,floatX=float32 python cifar10_cnn.py -e {0} -a {1} -n {2} -m {3} -d {4} -l {5} -r {6}'.format(e, a, n, m, d, l, r), shell=True)
+def run(e, a, n, m, d, l, r, p, x):
+    subprocess.call('THEANO_FLAGS=device=gpu,floatX=float32 python cifar10_cnn.py -e {0} -a {1} -n {2} -m {3} -d {4} -l {5} -r {6} -p {7} -x {8}'.format(e, a, n, m, d, l, r, p, x), shell=True)
 
 epoch = [50]
-aug = [True, False]
+aug = [False]
 noise = [False]
 maxout = [True, False]
-dropout = [True, False]
+dropout = [False]
 l1 = [False]
 l2 = [False]
-
+maxpooling=  [True, False]
+deep = [True, False]
 
 for e in epoch:
     for a in aug:
@@ -25,4 +26,6 @@ for e in epoch:
                 for d in dropout:
                     for one in l1:
                         for two in l2:
-                            run(e, a, n, m, d, one, two)
+                            for p in maxpooling:
+                                for x in deep:
+                                    run(e, a, n, m, d, one, two, p, x)
