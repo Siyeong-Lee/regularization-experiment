@@ -30,6 +30,7 @@ import sys
 import os
 import data_loader
 import time
+import numpy
 
 batch_size = 32
 nb_classes = 10
