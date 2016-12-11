@@ -72,7 +72,7 @@ def parse_arg():
     (options, args) = parser.parse_args()
     return options
 
-def main(nb_epoch=1, data_augmentation=True, noise=True, maxout=True, dropout=True, l1_reg=False, l2_reg=True, max_pooling=True, deep=False, sigma=0.01):
+def main(nb_epoch=1, data_augmentation=True, noise=True, maxout=True, dropout=True, l1_reg=False, l2_reg=True, max_pooling=True, deep=False, noise_sigma=0.01):
     # l1 and l2 regularization shouldn't be true in the same time
     if l1_reg and l2_reg:
         print("No need to run l1 and l2 regularization in the same time")
@@ -123,7 +123,7 @@ def main(nb_epoch=1, data_augmentation=True, noise=True, maxout=True, dropout=Tr
 
     model = Sequential()
     if noise:
-        model.add(GaussianNoise(sigma, input_shape=(img_channels, img_rows, img_cols)))
+        model.add(GaussianNoise(noise_sigma, input_shape=(img_channels, img_rows, img_cols)))
     model.add(Convolution2D(32, 3, 3, border_mode='same',
                             input_shape=(img_channels, img_rows, img_cols)))
     model.add(Activation('relu'))
