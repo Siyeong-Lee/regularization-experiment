@@ -54,10 +54,10 @@ data_url = "https://www.cs.toronto.edu/~kriz/cifar-10-python.tar.gz"
 
 output_path = "outputs/"
 # specify the purpose of tge experiment on the directory name
-otuptu_directory = "maxout_on_deep"
+output_directory = "maxout_on_deep"
 
 def parse_arg():
-    parser = optparse.OptionParser('usage%prog [-l load parameterf from] [-d dump parameter to] [-e epoch] [-r src or tgt] [-p maxpooling] [-x deep] [-o noise_sigma]')
+    parser = optparse.OptionParser('usage%prog  [-e epoch] [-r src or tgt] [-p max_pooling] [-x deep] [-o noise_sigma]')
     parser.add_option('-e', dest='epoch')
     parser.add_option('-a', dest='data_augmentation')
     parser.add_option('-n', dest='noise')
@@ -65,7 +65,7 @@ def parse_arg():
     parser.add_option('-d', dest='dropout')
     parser.add_option('-l', dest='l1')
     parser.add_option('-r', dest='l2')
-    parser.add_option('-p', dest='maxpooling')
+    parser.add_option('-p', dest='max_pooling')
     parser.add_option('-x', dest='deep')
     parser.add_option('-o', dest='noise_sigma')
 
@@ -216,8 +216,8 @@ def main(nb_epoch=1, data_augmentation=True, noise=True, maxout=True, dropout=Tr
         # Check if the download directory exists, otherwise create it.
         os.makedirs(file_path)
     # wirte test accuracy to a file
-    output_file_name = os.path.join(file_path, 'train_val_loss_with_dropout_epochs_{0}_data_augmentation_{1}_noise_{2}_sigma{12}_maxout_{3}_dropout_{4}_l1_{5}_l2_{6}_sigma_{7}_l1weight_{8}_l2weight_{9}_maxout_{10}_deep_{11}.txt'.format(nb_epoch, data_augmentation, noise, maxout, dropout, l1_reg, l2_reg, sigma, l1_weight, l2_weight, maxpooling, deep, sigma))
-    print("save file at {}".output_file_name)
+    output_file_name = os.path.join(file_path, 'train_val_loss_with_dropout_epochs_{0}_data_augmentation_{1}_noise_{2}_sigma{12}_maxout_{3}_dropout_{4}_l1_{5}_l2_{6}_sigma_{7}_l1weight_{8}_l2weight_{9}_maxout_{10}_deep_{11}.txt'.format(nb_epoch, data_augmentation, noise, maxout, dropout, l1_reg, l2_reg, sigma, l1_weight, l2_weight, max_pooling, deep, sigma))
+    print("save file at {}".format(output_file_name))
     with open(output_file_name, "w") as text_file:
         text_file.write('Test score: {}\n'.format(score[0]))
         text_file.write('Test accuracy: {}\n'.format(score[1]))
@@ -233,7 +233,7 @@ def main(nb_epoch=1, data_augmentation=True, noise=True, maxout=True, dropout=Tr
     plt.xlabel('#epoch')
     plt.ylabel('loss')
 
-    output_fig_name = os.path.join(file_path, 'train_val_loss_with_dropout_epochs_{0}_data_augmentation_{1}_noise_{2}_sigma{12}_maxout_{3}_dropout_{4}_l1_{5}_l2_{6}_sigma_{7}_l1weight_{8}_l2weight_{9}_maxout_{10}_deep_{11}.png'.format(nb_epoch, data_augmentation, noise, maxout, dropout, l1_reg, l2_reg, sigma, l1_weight, l2_weight, maxpooling, deep, sigma))
+    output_fig_name = os.path.join(file_path, 'train_val_loss_with_dropout_epochs_{0}_data_augmentation_{1}_noise_{2}_sigma{12}_maxout_{3}_dropout_{4}_l1_{5}_l2_{6}_sigma_{7}_l1weight_{8}_l2weight_{9}_maxout_{10}_deep_{11}.png'.format(nb_epoch, data_augmentation, noise, maxout, dropout, l1_reg, l2_reg, sigma, l1_weight, l2_weight, max_pooling, deep, sigma))
     plt.savefig(output_fig_name, dpi=300)
     plt.show()
 
@@ -248,8 +248,8 @@ if __name__ == '__main__':
         kwargs['dropout'] = True if opts.dropout == 'True' else False
         kwargs['l1_reg'] = True if opts.l1 == 'True' else False
         kwargs['l2_reg'] = True if opts.l2 == 'True' else False
-        kwargs['max_pooling'] = True if opts.maxpooling == 'True' else False
+        kwargs['max_pooling'] = True if opts.max_pooling == 'True' else False
         kwargs['deep'] = True if opts.deep == 'True' else False
-        kwargs['noise_sigma'] = opts.noise_sigma
+        kwargs['noise_sigma'] = float(opts.noise_sigma)
 
     main(**kwargs)
