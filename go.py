@@ -156,11 +156,14 @@ def main(nb_epoch=1, data_augmentation=True, noise=True, maxout=True, dropout=Tr
 
     start_time = time.time()
     if not data_augmentation:
-        his = model.fit(X_train, Y_train,
-                  batch_size=batch_size,
-                  nb_epoch=nb_epoch,
-                  validation_data=(X_valid, Y_valid),
-                  shuffle=True)
+        # his = model.fit(X_train, Y_train,
+        #           batch_size=batch_size,
+        #           nb_epoch=nb_epoch,
+        #           validation_data=(X_valid, Y_valid),
+        #           shuffle=True)
+    numpy.random.seed(seed)
+    model.fit(X_train, y_train, validation_data=(X_valid, y_valid), nb_epoch=nb_epoch, batch_size=64)
+# Final evaluation of the model
     else:
         # this will do preprocessing and realtime data augmentation
         datagen = ImageDataGenerator(
