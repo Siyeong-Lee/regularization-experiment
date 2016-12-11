@@ -18,7 +18,7 @@ l1 = [False]
 l2 = [False]
 maxpooling = [True, False]
 deep = [True, False]
-noise_rate = [0.1, 0.05, 0.01. 0.001]
+noise_rate = [0.1, 0.05, 0.01, 0.001]
 
 for e in epoch:
     for a in aug:
