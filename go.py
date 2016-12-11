@@ -54,9 +54,9 @@ data_path = "data/CIFAR-10/"
 # URL for the data-set on the internet.
 data_url = "https://www.cs.toronto.edu/~kriz/cifar-10-python.tar.gz"
 
-output_path = "outputs/"
+output_path = "outputs_good_model/"
 # specify the purpose of tge experiment on the directory name
-output_directory = "maxout_on_deep"
+output_directory = "output"
 
 def parse_arg():
     parser = optparse.OptionParser('usage%prog  [-e epoch] [-r src or tgt] [-p max_pooling] [-x deep] [-o noise_sigma]')
@@ -74,7 +74,7 @@ def parse_arg():
     (options, args) = parser.parse_args()
     return options
 
-def main(nb_epoch=1, data_augmentation=False, noise=False, maxout=False, dropout=True, l1_reg=False, l2_reg=True, max_pooling=True, deep=False, noise_sigma=0.01):
+def main(nb_epoch=50, data_augmentation=False, noise=False, maxout=False, dropout=True, l1_reg=False, l2_reg=True, max_pooling=True, deep=False, noise_sigma=0.01):
     # l1 and l2 regularization shouldn't be true in the same time
     if l1_reg and l2_reg:
         print("No need to run l1 and l2 regularization in the same time")
@@ -145,11 +145,10 @@ def main(nb_epoch=1, data_augmentation=False, noise=False, maxout=False, dropout
     model.add(Dropout(0.2))
     model.add(Dense(nb_classes, activation='softmax'))
     # Compile model
-    nb_epoch = 25
     lrate = 0.01
     decay = lrate/nb_epoch
     sgd = SGD(lr=lrate, momentum=0.9, decay=decay, nesterov=False)
-    model.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=['accuracy'])
+    his = model.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=['accuracy'])
     print(model.summary())
 
 
