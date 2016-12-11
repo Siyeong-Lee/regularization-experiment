@@ -20,6 +20,7 @@ from keras.models import Sequential
 from keras.layers import Dense, Dropout, Activation, Flatten
 from keras.layers import Convolution2D, MaxPooling2D, GaussianNoise, MaxoutDense
 from keras.regularizers import l1, l2, activity_l1, activity_l2, l1l2
+from keras.constraints import maxnorm
 from keras.optimizers import SGD
 from keras.utils import np_utils
 from sklearn.model_selection import train_test_split
@@ -143,7 +144,7 @@ def main(nb_epoch=1, data_augmentation=True, noise=True, maxout=True, dropout=Tr
     model.add(Dropout(0.2))
     model.add(Dense(num_classes, activation='softmax'))
     # Compile model
-    epochs = 50
+    nb_epoch = 50
     lrate = 0.01
     decay = lrate/epochs
     sgd = SGD(lr=lrate, momentum=0.9, decay=decay, nesterov=False)
