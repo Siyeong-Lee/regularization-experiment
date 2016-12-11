@@ -93,19 +93,19 @@ def main(nb_epoch=1, data_augmentation=True, noise=True, maxout=True, dropout=Tr
     # the data, shuffled and split between train and test sets
     (X_train, y_train), (X_test, y_test) = cifar10.load_data()
     # split the validation dataset
-    X_train, X_valid, y_train, y_valid = train_test_split(X_train, y_train, test_size=0.2, random_state=0)
+    # X_train, X_valid, y_train, y_valid = train_test_split(X_train, y_train, test_size=0.2, random_state=0)
 
 
     # convert class vectors to binary class matrices
     Y_train = np_utils.to_categorical(y_train, nb_classes)
-    Y_valid = np_utils.to_categorical(y_valid, nb_classes)
+    # Y_valid = np_utils.to_categorical(y_valid, nb_classes)
     Y_test = np_utils.to_categorical(y_test, nb_classes)
 
     X_train = X_train.astype('float32')
-    X_valid = X_valid.astype('float32')
+    # X_valid = X_valid.astype('float32')
     X_test = X_test.astype('float32')
     X_train /= 255
-    X_valid /= 255
+    # X_valid /= 255
     X_test /= 255
 
     ##### try loading data using data_loader.py ####
@@ -144,7 +144,7 @@ def main(nb_epoch=1, data_augmentation=True, noise=True, maxout=True, dropout=Tr
     model.add(Dropout(0.2))
     model.add(Dense(nb_classes, activation='softmax'))
     # Compile model
-    nb_epoch = 50
+    nb_epoch = 25
     lrate = 0.01
     decay = lrate/nb_epoch
     sgd = SGD(lr=lrate, momentum=0.9, decay=decay, nesterov=False)
@@ -162,7 +162,7 @@ def main(nb_epoch=1, data_augmentation=True, noise=True, maxout=True, dropout=Tr
         #           validation_data=(X_valid, Y_valid),
         #           shuffle=True)
         numpy.random.seed(seed)
-        model.fit(X_train, y_train, validation_data=(X_valid, y_valid), nb_epoch=nb_epoch, batch_size=64)
+        model.fit(X_train, y_train, validation_data=(X_test, y_test), nb_epoch=nb_epoch, batch_size=64)
 # Final evaluation of the model
     else:
         # this will do preprocessing and realtime data augmentation
