@@ -125,30 +125,40 @@ def main(nb_epoch=50, data_augmentation=False, noise=False, maxout=False, dropou
 
     # Create the model
     model = Sequential()
+    if noise:
+        model.add(GaussianNoise(noise_sigma, input_shape=(img_channels, img_rows, img_cols)))
     model.add(Convolution2D(32, 3, 3, input_shape=(3, 32, 32), activation='relu', border_mode='same'))
-    model.add(Dropout(0.2))
+    if dropout:
+        model.add(Dropout(0.2))
     model.add(Convolution2D(32, 3, 3, activation='relu', border_mode='same'))
     model.add(MaxPooling2D(pool_size=(2, 2)))
-    model.add(Convolution2D(64, 3, 3, activation='relu', border_mode='same'))
-    model.add(Dropout(0.2))
+    if dropout:
+        model.add(Dropout(0.2))
     model.add(Convolution2D(64, 3, 3, activation='relu', border_mode='same'))
     model.add(MaxPooling2D(pool_size=(2, 2)))
     model.add(Convolution2D(128, 3, 3, activation='relu', border_mode='same'))
-    model.add(Dropout(0.2))
+    if dropout:
+        model.add(Dropout(0.2))
     model.add(Convolution2D(128, 3, 3, activation='relu', border_mode='same'))
     model.add(MaxPooling2D(pool_size=(2, 2)))
     model.add(Flatten())
-    model.add(Dropout(0.2))
+    if dropout:
+        model.add(Dropout(0.2))
     model.add(Dense(1024, activation='relu', W_constraint=maxnorm(3)))
-    model.add(Dropout(0.2))
-    model.add(Dense(512, activation='relu', W_constraint=maxnorm(3)))
-    model.add(Dropout(0.2))
+    if dropout:
+        model.add(Dropout(0.2))
+    if maxout:
+        model.add(MaxoutDense(512, nb_feature=4, init='glorot_uniform'))
+    else:
+        model.add(Dense(512, activation='relu', W_constraint=maxnorm(3)))
+    if dropout:
+        model.add(Dropout(0.2))
     model.add(Dense(nb_classes, activation='softmax'))
     # Compile model
     lrate = 0.01
     decay = lrate/nb_epoch
     sgd = SGD(lr=lrate, momentum=0.9, decay=decay, nesterov=False)
-    his = model.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=['accuracy'])
+    model.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=['accuracy'])
     print(model.summary())
 
 
@@ -162,7 +172,7 @@ def main(nb_epoch=50, data_augmentation=False, noise=False, maxout=False, dropou
         #           validation_data=(X_valid, Y_valid),
         #           shuffle=True)
         # numpy.random.seed(seed)
-        model.fit(X_train, Y_train, validation_data=(X_test, Y_test), nb_epoch=nb_epoch, batch_size=64)
+        his = model.fit(X_train, Y_train, validation_data=(X_test, Y_test), nb_epoch=nb_epoch, batch_size=64)
 # Final evaluation of the model
     else:
         # this will do preprocessing and realtime data augmentation
@@ -173,10 +183,10 @@ def main(nb_epoch=50, data_augmentation=False, noise=False, maxout=False, dropou
             samplewise_std_normalization=False,  # divide each input by its std
             zca_whitening=True,  # apply ZCA whitening
             rotation_range=0,  # randomly rotate images in the range (degrees, 0 to 180)
-            width_shift_range=0.1,  # randomly shift images horizontally (fraction of total width)
-            height_shift_range=0.1,  # randomly shift images vertically (fraction of total height)
+            width_shift_range=0,  # randomly shift images horizontally (fraction of total width)
+            height_shift_range=0,  # randomly shift images vertically (fraction of total height)
             horizontal_flip=True,  # randomly flip images
-            vertical_flip=False)  # randomly flip images
+            vertical_flip=True)  # randomly flip images
 
         # compute quantities required for featurewise normalization
         # (std, mean, and principal components if ZCA whitening is applied)
