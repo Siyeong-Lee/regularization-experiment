@@ -134,11 +134,6 @@ def main(nb_epoch=1, data_augmentation=True, noise=True, maxout=True, dropout=Tr
     if dropout:
         model.add(Dropout(0.25))
 
-    model.add(Convolution2D(64, 3, 3, border_mode='same'))
-    # model.add(Activation('relu'))
-    model.add(Convolution2D(64, 3, 3))
-    # model.add(Activation('relu'))
-    model.add(Merge([model1, model2], mode='concat', concat_axis=1)
     if max_pooling:
         model.add(MaxPooling2D(pool_size=(2, 2)))
     if dropout:
