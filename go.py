@@ -163,7 +163,7 @@ def main(nb_epoch=1, data_augmentation=False, noise=False, maxout=False, dropout
         #           validation_data=(X_valid, Y_valid),
         #           shuffle=True)
         # numpy.random.seed(seed)
-        model.fit(X_train, y_train, validation_data=(X_test, y_test), nb_epoch=nb_epoch, batch_size=64)
+        model.fit(X_train, Y_train, validation_data=(X_test, Y_test), nb_epoch=nb_epoch, batch_size=64)
 # Final evaluation of the model
     else:
         # this will do preprocessing and realtime data augmentation
