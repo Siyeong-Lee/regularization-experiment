@@ -119,7 +119,7 @@ def main(nb_epoch=1, data_augmentation=True, noise=True, maxout=True, dropout=Tr
     # X_train, X_valid, Y_train, Y_valid = train_test_split(X_train, Y_train, test_size=0.2, random_state=0)
     print("Size of:")
     print("- Training-set:\t\t{}".format(len(X_train)))
-    print("- Validation-set:\t\t{}".format(len(X_valid)))
+    # print("- Validation-set:\t\t{}".format(len(X_valid)))
     print("- Test-set:\t\t{}".format(len(X_test)))
 
     # Create the model
@@ -187,7 +187,7 @@ def main(nb_epoch=1, data_augmentation=True, noise=True, maxout=True, dropout=Tr
                             batch_size=batch_size),
                             samples_per_epoch=X_train.shape[0],
                             nb_epoch=nb_epoch,
-                            validation_data=(X_valid, Y_valid))
+                            validation_data=(X_test, Y_test))
 
     # evaluate our model
     score = model.evaluate(X_test, Y_test, verbose=0)
