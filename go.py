@@ -76,7 +76,8 @@ def parse_arg():
     (options, args) = parser.parse_args()
     return options
 
-def main(nb_epoch=50, data_augmentation=False, noise=False, maxout=False, dropout=True, l1_reg=False, l2_reg=True, max_pooling=True, deep=False, noise_sigma=0.01, weight_constraint=True):
+# the default setting
+def main(nb_epoch=50, data_augmentation=False, noise=False, maxout=False, dropout=True, l1_reg=False, l2_reg=False, max_pooling=True, deep=False, noise_sigma=0.01, weight_constraint=True):
     # l1 and l2 regularization shouldn't be true in the same time
     if l1_reg and l2_reg:
         print("No need to run l1 and l2 regularization in the same time")
@@ -226,7 +227,7 @@ def main(nb_epoch=50, data_augmentation=False, noise=False, maxout=False, dropou
         # Check if the download directory exists, otherwise create it.
         os.makedirs(file_path)
     # wirte test accuracy to a file
-    output_file_name = os.path.join(file_path, 'train_val_loss_with_dropout__{0}_data_augmentation_{1}_noise_{2}_sigma{12}_maxout_{3}_dropout_{4}_l1_{5}_l2_{6}_sigma_{7}_l1weight_{8}_l2weight_{9}_max_pooling_{10}_deep_{11}.txt'.format(nb_epoch, data_augmentation, noise, maxout, dropout, l1_reg, l2_reg, sigma, l1_weight, l2_weight, max_pooling, deep, sigma))
+    output_file_name = os.path.join(file_path, 'train_val_loss_with_dropout__{0}_data_augmentation_{1}_noise_{2}_sigma{12}_maxout_{3}_dropout_{4}_l1_{5}_l2_{6}_sigma_{7}_l1weight_{8}_l2weight_{9}_max_pooling_{10}_deep_{11}.txt'.format(nb_epoch, data_augmentation, noise, maxout, dropout, l1_reg, l2_reg, sigma, l1_weight, l2_weight, max_pooling, deep, noise_sigma))
     print("save file at {}".format(output_file_name)    )
     with open(output_file_name, "w") as text_file:
         text_file.write('Test score: {}\n'.format(score[0]))
@@ -243,7 +244,7 @@ def main(nb_epoch=50, data_augmentation=False, noise=False, maxout=False, dropou
     plt.xlabel('#epoch')
     plt.ylabel('loss')
 
-    output_fig_name = os.path.join(file_path, 'train_val_loss_with_dropout__{0}_data_augmentation_{1}_noise_{2}_sigma{12}_maxout_{3}_dropout_{4}_l1_{5}_l2_{6}_sigma_{7}_l1weight_{8}_l2weight_{9}_max_pooling_{10}_deep_{11}.png'.format(nb_epoch, data_augmentation, noise, maxout, dropout, l1_reg, l2_reg, sigma, l1_weight, l2_weight, max_pooling, deep, sigma))
+    output_fig_name = os.path.join(file_path, 'train_val_loss_with_dropout__{0}_data_augmentation_{1}_noise_{2}_sigma{12}_maxout_{3}_dropout_{4}_l1_{5}_l2_{6}_sigma_{7}_l1weight_{8}_l2weight_{9}_max_pooling_{10}_deep_{11}.png'.format(nb_epoch, data_augmentation, noise, maxout, dropout, l1_reg, l2_reg, sigma, l1_weight, l2_weight, max_pooling, deep, noise_sigma))
     plt.savefig(output_fig_name, dpi=300)
     plt.show()
 
