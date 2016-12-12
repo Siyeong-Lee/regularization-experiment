@@ -150,19 +150,29 @@ def main(nb_epoch=50, data_augmentation=False, noise=False, maxout=False, dropou
     model.add(Flatten())
     if dropout:
         model.add(Dropout(0.2))
+
     if l2_reg:
         model.add(Dense(1024, activation='relu', W_regularizer=l2(l2_weight)))
     elif weight_constraint:
         model.add(Dense(1024, activation='relu', W_constraint=maxnorm(3)))
+    elif maxout:
+        model.add(MaxoutDense(1024, nb_feature=4, init='glorot_uniform'))
     else:
         model.add(Dense(1024, activation='relu'))
 
     if dropout:
         model.add(Dropout(0.2))
-    if maxout:
+
+    if l2_reg:
+        model.add(Dense(512, activation='relu', W_regularizer=l2(l2_weight)))
+    elif weight_constraint:
+        model.add(Dense(512, activation='relu', W_constraint=maxnorm(3)))
+    elif maxout:
         model.add(MaxoutDense(512, nb_feature=4, init='glorot_uniform'))
     else:
-        model.add(Dense(512, activation='relu', W_constraint=maxnorm(3)))
+        model.add(Dense(512, activation='relu'))
+
+
     if dropout:
         model.add(Dropout(0.2))
     model.add(Dense(nb_classes, activation='softmax'))
