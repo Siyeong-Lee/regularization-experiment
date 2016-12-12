@@ -56,11 +56,11 @@ data_url = "https://www.cs.toronto.edu/~kriz/cifar-10-python.tar.gz"
 
 output_path = "outputs_good_model/"
 # specify the purpose of tge experiment on the directory name
-output_directory = "l2_weight_constraint/"
+output_directory = "l2_weight_constraint_0749/"
 
 def parse_arg():
 
-    parser = optparse.OptionParser('usage%prog  [-e epoch] [-a data_augmentation] [-n noise] [-m maxout] [-d dropout] [-l l1] [-r l2] [-p max_pooling] [-x deep] [-o noise_sigma] [-w weight_constraint]')
+    parser = optparse.OptionParser('usage%prog  [-e epoch] [-a data_augmentation] [-n noise] [-m maxout] [-d dropout] [-l l1] [-r l2] [-p max_pooling] [-x deep] [-o noise_sigma] [-w weight_constraint] [-q l1_weight] [-z l1_weight]')
     parser.add_option('-e', dest='epoch')
     parser.add_option('-a', dest='data_augmentation')
     parser.add_option('-n', dest='noise')
@@ -72,12 +72,14 @@ def parse_arg():
     parser.add_option('-x', dest='deep')
     parser.add_option('-o', dest='noise_sigma')
     parser.add_option('-w', dest='weight_constraint')
+    parser.add_option('-q', dest='l1_weight')
+    parser.add_option('-z', dest='l2_weight')
 
     (options, args) = parser.parse_args()
     return options
 
 # the default setting
-def main(nb_epoch=50, data_augmentation=False, noise=False, maxout=False, dropout=True, l1_reg=False, l2_reg=False, max_pooling=True, deep=False, noise_sigma=0.01, weight_constraint=True):
+def main(nb_epoch=50, data_augmentation=False, noise=False, maxout=False, dropout=True, l1_reg=False, l2_reg=False, max_pooling=True, deep=False, noise_sigma=0.01, weight_constraint=True, l1_weight=0.01, l2_weight=0.01):
     # l1 and l2 regularization shouldn't be true in the same time
     if l1_reg and l2_reg:
         print("No need to run l1 and l2 regularization in the same time")
@@ -93,26 +95,27 @@ def main(nb_epoch=50, data_augmentation=False, noise=False, maxout=False, dropou
     print("maxout: {0}".format(maxout))
     print("dropout: {0}".format(dropout))
     print("l1: {0}".format(l1_reg))
-    print("l2: {0}".format(l2_reg))
+    print("l1_weight: {0}".format(l1_weight))
+    print("l2_weight: {0}".format(l2_weight))
     print("max_pooling: {0}".format(max_pooling))
     print("deep: {0}".format(deep))
     print("weight_constraint: {0}".format(weight_constraint))
     # the data, shuffled and split between train and test sets
     (X_train, y_train), (X_test, y_test) = cifar10.load_data()
     # split the validation dataset
-    # X_train, X_valid, y_train, y_valid = train_test_split(X_train, y_train, test_size=0.2, random_state=0)
+    X_train, X_valid, y_train, y_valid = train_test_split(X_train, y_train, test_size=0.2, random_state=0)
 
 
     # convert class vectors to binary class matrices
     Y_train = np_utils.to_categorical(y_train, nb_classes)
-    # Y_valid = np_utils.to_categorical(y_valid, nb_classes)
+    Y_valid = np_utils.to_categorical(y_valid, nb_classes)
     Y_test = np_utils.to_categorical(y_test, nb_classes)
 
     X_train = X_train.astype('float32')
-    # X_valid = X_valid.astype('float32')
+    X_valid = X_valid.astype('float32')
     X_test = X_test.astype('float32')
     X_train /= 255
-    # X_valid /= 255
+    X_valid /= 255
     X_test /= 255
 
     ##### try loading data using data_loader.py ####
@@ -194,7 +197,7 @@ def main(nb_epoch=50, data_augmentation=False, noise=False, maxout=False, dropou
         #           validation_data=(X_valid, Y_valid),
         #           shuffle=True)
         # numpy.random.seed(seed)
-        his = model.fit(X_train, Y_train, validation_data=(X_test, Y_test), nb_epoch=nb_epoch, batch_size=64)
+        his = model.fit(X_train, Y_train, validation_data=(X_valid, Y_valid), nb_epoch=nb_epoch, batch_size=64)
 # Final evaluation of the model
     else:
         # this will do preprocessing and realtime data augmentation
@@ -219,8 +222,20 @@ def main(nb_epoch=50, data_augmentation=False, noise=False, maxout=False, dropou
                             batch_size=batch_size),
                             samples_per_epoch=X_train.shape[0],
                             nb_epoch=nb_epoch,
-                            validation_data=(X_test, Y_test))
-
+                            validation_data=(X_valid, Y_valid))
+    # print out setting again
+    print("number of epoch: {0}".format(nb_epoch))
+    print("data augmentation: {0}".format(data_augmentation))
+    print("noise: {0}".format(noise))
+    print("sigma: {0}".format(sigma))
+    print("maxout: {0}".format(maxout))
+    print("dropout: {0}".format(dropout))
+    print("l1: {0}".format(l1_reg))
+    print("l1_weight: {0}".format(l1_weight))
+    print("l2_weight: {0}".format(l2_weight))
+    print("max_pooling: {0}".format(max_pooling))
+    print("deep: {0}".format(deep))
+    print("weight_constraint: {0}".format(weight_constraint))
     # evaluate our model
     score = model.evaluate(X_test, Y_test, verbose=0)
     print('Test score:', score[0])
@@ -273,5 +288,7 @@ if __name__ == '__main__':
         kwargs['deep'] = True if opts.deep == 'True' else False
         kwargs['noise_sigma'] = float(opts.noise_sigma)
         kwargs['weight_constraint'] = True if opts.weight_constraint == 'True' else False
+        kwargs['l1_weight'] = float(opts.l1_weight)
+        kwargs['l2_weight'] = float(opts.l2_weight)
 
     main(**kwargs)
