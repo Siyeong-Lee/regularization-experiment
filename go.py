@@ -131,7 +131,7 @@ def main(nb_epoch=50, data_augmentation=False, noise=False, maxout=False, dropou
     # Create the model
     model = Sequential()
     if noise:
-        model.add(GaussianNoise(noise_sigma, input_shape=(32, 3, 3)))
+        model.add(GaussianNoise(noise_sigma, input_shape=(3, 32, 32)))
     model.add(Convolution2D(32, 3, 3, input_shape=(3, 32, 32), activation='relu', border_mode='same'))
     if dropout:
         model.add(Dropout(0.2))
@@ -148,7 +148,6 @@ def main(nb_epoch=50, data_augmentation=False, noise=False, maxout=False, dropou
     model.add(MaxPooling2D(pool_size=(2, 2)))
     model.add(Flatten())
     if dropout:
-
         model.add(Dropout(0.2))
     if l2_reg:
         model.add(Dense(1024, activation='relu', W_regularizer=l2(l2_weight)))
