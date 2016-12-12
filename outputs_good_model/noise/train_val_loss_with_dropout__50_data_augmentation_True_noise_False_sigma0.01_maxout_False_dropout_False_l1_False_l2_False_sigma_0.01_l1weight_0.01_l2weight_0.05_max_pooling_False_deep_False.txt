@@ -1,0 +1,3 @@
+Test score: 8.534135618591309
+Test accuracy: 0.0905
+Training time: 2078.1967792510986
